@@ -88,7 +88,7 @@ namespace BenchmarkTest
             {
                 if(timeTaken >= benchmarks[scenario].TimeSpan.Add(new TimeSpan(0, 0, ToleranceSeconds)))
                 {
-                    throw new BenchmarkAssertionFailure(string.Format("Scenario '{0}' Failed. \nExpected time: {1}. Actual time: {2}", scenario, existingPerfData.TimeSpan, timeTaken));
+                    throw new BenchmarkAssertionFailure(string.Format("Scenario '{0}' Failed. \nExpected time: {1}. Actual time: {2}", scenario, benchmarks[scenario].TimeSpan, timeTaken));
                 }
             }
         }
