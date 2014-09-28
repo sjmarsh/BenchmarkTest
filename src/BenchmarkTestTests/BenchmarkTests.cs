@@ -59,8 +59,8 @@ namespace BenchmarkTestTests
             Benchmark.BenchmarkAssert(() => Thread.Sleep(1000), scenarioName);
 
             var benchmarksJson = File.ReadAllText(BenchmarkFile);
-            var benchmarks = JsonConvert.DeserializeObject<List<PerformanceData>>(benchmarksJson);
-            var benchmark = benchmarks.FirstOrDefault(b => b.ScenarioName == scenarioName);
+            var benchmarks = JsonConvert.DeserializeObject<Dictionary<string, PerformanceData>>(benchmarksJson);
+            var benchmark = benchmarks[scenarioName];
             Assert.That(benchmark, Is.Not.Null);
             Assert.That(benchmark.TimeSpan.Seconds, Is.EqualTo(1));
         }
