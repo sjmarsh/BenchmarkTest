@@ -3,17 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BenchmarkTest
 {
     public static class Benchmark
     {
-        private const string defaultBenchmarkFile = @"..\BenchmarkData.json";     
-        private static Dictionary<string, PerformanceData> benchmarks;
+        private const string DefaultBenchmarkFile = @"..\BenchmarkData.json";     
+        private static Dictionary<string, PerformanceData> _benchmarks;
 
         /// <summary>
         /// The full path to the benchmark file. Defaults to 'BenchmarkData.json' in Test bin folder if not provided.
@@ -52,43 +49,43 @@ namespace BenchmarkTest
         {
             if(string.IsNullOrEmpty(BenchmarkFile))
             {
-                BenchmarkFile = defaultBenchmarkFile;
+                BenchmarkFile = DefaultBenchmarkFile;
             }
         }
 
         private static void GetExistingBenchmarks()
         {
-            if (benchmarks == null)
+            if (_benchmarks == null)
             {
                 if (File.Exists(BenchmarkFile))
                 {
                     var benchmarksJson = File.ReadAllText(BenchmarkFile);
-                    benchmarks = JsonConvert.DeserializeObject<Dictionary<string, PerformanceData>>(benchmarksJson);
+                    _benchmarks = JsonConvert.DeserializeObject<Dictionary<string, PerformanceData>>(benchmarksJson);
                 }
                 else
                 {
                     Console.WriteLine(string.Format("Benchmark File does not exist. Creating: {0}", BenchmarkFile));
                     Directory.CreateDirectory(Path.GetDirectoryName(BenchmarkFile));
-                    benchmarks = new Dictionary<string, PerformanceData>();
-                    File.WriteAllText(BenchmarkFile, JsonConvert.SerializeObject(benchmarks));
+                    _benchmarks = new Dictionary<string, PerformanceData>();
+                    File.WriteAllText(BenchmarkFile, JsonConvert.SerializeObject(_benchmarks));
                 }
             }
         }
 
         private static void AssertTimeAgainstBenchmark(string scenario, TimeSpan timeTaken)
         {
-            if (!benchmarks.ContainsKey(scenario))
+            if (!_benchmarks.ContainsKey(scenario))
             {
                 Console.WriteLine(string.Format("Scenario '{0}' not previously tested. Adding to benchmarks.", scenario));
-                benchmarks.Add(scenario, new PerformanceData { ScenarioName = scenario, TimeSpan = timeTaken });
-                var jsonString = JsonConvert.SerializeObject(benchmarks);
+                _benchmarks.Add(scenario, new PerformanceData { ScenarioName = scenario, TimeSpan = timeTaken });
+                var jsonString = JsonConvert.SerializeObject(_benchmarks);
                 File.WriteAllText(BenchmarkFile, jsonString);
             }
             else
             {
-                if(timeTaken >= benchmarks[scenario].TimeSpan.Add(new TimeSpan(0, 0, ToleranceSeconds)))
+                if(timeTaken >= _benchmarks[scenario].TimeSpan.Add(new TimeSpan(0, 0, ToleranceSeconds)))
                 {
-                    throw new BenchmarkAssertionFailure(string.Format("Scenario '{0}' Failed. \nExpected time: {1}. Actual time: {2}", scenario, benchmarks[scenario].TimeSpan, timeTaken));
+                    throw new BenchmarkAssertionFailure(string.Format("Scenario '{0}' Failed. \nExpected time: {1}. Actual time: {2}", scenario, _benchmarks[scenario].TimeSpan, timeTaken));
                 }
             }
         }

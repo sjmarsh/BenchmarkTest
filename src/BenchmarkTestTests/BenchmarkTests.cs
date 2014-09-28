@@ -1,10 +1,8 @@
 ﻿using NUnit.Framework;
-using System;
 using BenchmarkTest;
 using System.Threading;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json;
 
 namespace BenchmarkTestTests
