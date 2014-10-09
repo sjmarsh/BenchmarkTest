@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Benchmarks</title>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Scenario', 'Benchmark', 'Time Taken'],
+          ['1',  10,      11],
+          ['2',  12,      11],
+          ['3',  15,       14],
+          ['4',  13,      12]
+        ]);
+
+        var options = {
+          title: 'Benchmarks',
+          vAxis: {title: 'Scenario',  titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+</head>
+<body>
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+</body>
+</html>

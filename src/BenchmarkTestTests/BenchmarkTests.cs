@@ -4,6 +4,7 @@ using System.Threading;
 using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace BenchmarkTestTests
 {
@@ -23,6 +24,7 @@ namespace BenchmarkTestTests
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
+          //  Benchmark.GenerateReport(string.Format(@"c:\temp\report_{0}.html", DateTime.Now.ToString("dd_MM_yy_HH_mm_ss")));
             CleanUpBenchmarkFile(BenchmarkFile);
         }
                

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BenchmarkTest.Reports;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,11 +10,12 @@ namespace BenchmarkTest
 {
     public static class Benchmark
     {
-        private const string DefaultBenchmarkFile = @"..\BenchmarkData.json";     
+        private const string DefaultBenchmarkFile = @"..\BenchmarkData.json";     // maybe force benchmark file to be set rather than default.
         private static Dictionary<string, PerformanceData> _benchmarks;
 
         /// <summary>
         /// The full path to the benchmark file. Defaults to 'BenchmarkData.json' in Test bin folder if not provided.
+        /// Assumes consuming tests will specify differnt file name if required (otherwise all tests will end up mixed into one file because static).
         /// </summary>
         public static string BenchmarkFile { get; set; }
 
@@ -31,7 +33,7 @@ namespace BenchmarkTest
         public static void BenchmarkAssert(Action operationToBenchmark, [CallerMemberName]string scenarioName = "")
         {
             InitializeDefaults();
-            GetExistingBenchmarks();
+            LoadExistingBenchmarks();
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -45,6 +47,13 @@ namespace BenchmarkTest
             AssertTimeAgainstBenchmark(scenarioName, timeTaken);
         }
 
+     /*  
+      * Not yet fully implmented
+      * public static void GenerateReport(string reportPath)
+        {
+            ReportBuilder.Build(reportPath, _benchmarks);
+        }
+        */
         private static void InitializeDefaults()
         {
             if(string.IsNullOrEmpty(BenchmarkFile))
@@ -53,7 +62,7 @@ namespace BenchmarkTest
             }
         }
 
-        private static void GetExistingBenchmarks()
+        private static void LoadExistingBenchmarks()
         {
             if (_benchmarks == null)
             {
