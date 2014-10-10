@@ -46,14 +46,12 @@ namespace BenchmarkTest
 
             AssertTimeAgainstBenchmark(scenarioName, timeTaken);
         }
-
-     /*  
-      * Not yet fully implmented
-      * public static void GenerateReport(string reportPath)
+        
+        public static void GenerateReport(string reportPath)
         {
             ReportBuilder.Build(reportPath, _benchmarks);
         }
-        */
+      
         private static void InitializeDefaults()
         {
             if(string.IsNullOrEmpty(BenchmarkFile))

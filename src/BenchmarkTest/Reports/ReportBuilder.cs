@@ -31,7 +31,40 @@ namespace BenchmarkTest.Reports
 
         private static string GenerateReport(string reportTemplate, Dictionary<string, PerformanceData> reportData)
         {
-            // TODO: tokenize report template and incorporate data
+            const string jsonDataToken = "#data-token#";
+            const int lastRunSeconds = 5; // todo capture actual last run
+
+            /*
+           * required format
+           * [
+        ['Scenario', 'Benchmark', 'Time Taken'],
+        ['1',  10,      11],
+        ['2',  12,      11],
+        ['3',  15,       14],
+        ['4',  13,      12]
+      ]
+           */
+
+            var jsonString = new StringBuilder();
+            jsonString.Append("[ ['Scenario', 'Benchmark', 'Time Taken'],");
+
+            var reportDataCount = reportData.Values.Count;
+            for (var i = 0; i < reportDataCount; i++)
+            {
+                var performanceData = reportData.ElementAt(i).Value;
+                if (i == (reportDataCount - 1))
+                {
+                    jsonString.Append(string.Format("['{0}', {1}, {2}]", performanceData.ScenarioName, performanceData.TimeSpan.Seconds, lastRunSeconds));
+                }
+                else
+                {
+                    jsonString.Append(string.Format("['{0}', {1}, {2}],", performanceData.ScenarioName, performanceData.TimeSpan.Seconds, lastRunSeconds));
+                }
+            }
+            
+            jsonString.Append("]");
+
+            reportTemplate = reportTemplate.Replace(jsonDataToken, jsonString.ToString());
 
             return reportTemplate;
         }
