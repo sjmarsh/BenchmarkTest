@@ -62,7 +62,7 @@ namespace BenchmarkTestTests
             var benchmarks = JsonConvert.DeserializeObject<Dictionary<string, PerformanceData>>(benchmarksJson);
             var benchmark = benchmarks[scenarioName];
             Assert.That(benchmark, Is.Not.Null);
-            Assert.That(benchmark.TimeSpan.Seconds, Is.EqualTo(1));
+            Assert.That(benchmark.BenchmarkedTime.Seconds, Is.EqualTo(1));
         }
 
         [Test]

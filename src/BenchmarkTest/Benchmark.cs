@@ -83,22 +83,24 @@ namespace BenchmarkTest
             if (!_benchmarks.ContainsKey(scenario))
             {
                 Console.WriteLine("Scenario '{0}' not previously tested. Adding to benchmarks.", scenario);
-                _benchmarks.Add(scenario, new PerformanceData { ScenarioName = scenario, TimeSpan = timeTaken });
+                _benchmarks.Add(scenario, new PerformanceData { ScenarioName = scenario, BenchmarkedTime = timeTaken, LastRunTime = timeTaken });
                 var jsonString = JsonConvert.SerializeObject(_benchmarks);
                 File.WriteAllText(BenchmarkFile, jsonString);
             }
             else
             {
-                if(timeTaken >= _benchmarks[scenario].TimeSpan.Add(new TimeSpan(0, 0, ToleranceSeconds)))
+                _benchmarks[scenario].LastRunTime = timeTaken;
+
+                if(timeTaken >= _benchmarks[scenario].BenchmarkedTime.Add(new TimeSpan(0, 0, ToleranceSeconds)))
                 {
-                    throw new BenchmarkAssertionFailure(string.Format("Scenario '{0}' Failed. \nExpected time: {1}. Actual time: {2}", scenario, _benchmarks[scenario].TimeSpan, timeTaken));
+                    throw new BenchmarkAssertionFailure(string.Format("Scenario '{0}' Failed. \nExpected time: {1}. Actual time: {2}", scenario, _benchmarks[scenario].BenchmarkedTime, timeTaken));
                 }
                 Console.WriteLine("\n");
                 Console.WriteLine("Test Successful for Scenario: {0}.\n" +
                                   "Time taken was within range of the benchmark for this scenario.\n" +
                                   "Benchmark: {1}\n" +
                                   "Time Taken: {2}\n" +
-                                  "Tolerance (seconds): {3}", scenario, _benchmarks[scenario].TimeSpan, timeTaken, ToleranceSeconds);
+                                  "Tolerance (seconds): {3}", scenario, _benchmarks[scenario].BenchmarkedTime, timeTaken, ToleranceSeconds);
                 Console.WriteLine("\n");
             }
         }

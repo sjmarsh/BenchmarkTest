@@ -32,8 +32,7 @@ namespace BenchmarkTest.Reports
         private static string GenerateReport(string reportTemplate, Dictionary<string, PerformanceData> reportData)
         {
             const string jsonDataToken = "#data-token#";
-            const int lastRunSeconds = 5; // todo capture actual last run
-
+            
             /*
            * required format
            * [
@@ -52,14 +51,13 @@ namespace BenchmarkTest.Reports
             for (var i = 0; i < reportDataCount; i++)
             {
                 var performanceData = reportData.ElementAt(i).Value;
+                string lineFormat = "['{0}', {1}, {2}],";
                 if (i == (reportDataCount - 1))
                 {
-                    jsonString.Append(string.Format("['{0}', {1}, {2}]", performanceData.ScenarioName, performanceData.TimeSpan.Seconds, lastRunSeconds));
+                    lineFormat = "['{0}', {1}, {2}]";
                 }
-                else
-                {
-                    jsonString.Append(string.Format("['{0}', {1}, {2}],", performanceData.ScenarioName, performanceData.TimeSpan.Seconds, lastRunSeconds));
-                }
+                
+                jsonString.Append(string.Format(lineFormat,  performanceData.ScenarioName, performanceData.BenchmarkedTime.Seconds, performanceData.LastRunTime.Seconds));
             }
             
             jsonString.Append("]");
