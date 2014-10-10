@@ -42,8 +42,7 @@ namespace BenchmarkTest
 
             stopwatch.Stop();
             var timeTaken = stopwatch.Elapsed;
-            Console.WriteLine("Time taken :" + timeTaken);
-
+            
             AssertTimeAgainstBenchmark(scenarioName, timeTaken);
         }
         
@@ -71,7 +70,7 @@ namespace BenchmarkTest
                 }
                 else
                 {
-                    Console.WriteLine(string.Format("Benchmark File does not exist. Creating: {0}", BenchmarkFile));
+                    Console.WriteLine("Benchmark File does not exist. Creating: {0}", BenchmarkFile);
                     Directory.CreateDirectory(Path.GetDirectoryName(BenchmarkFile));
                     _benchmarks = new Dictionary<string, PerformanceData>();
                     File.WriteAllText(BenchmarkFile, JsonConvert.SerializeObject(_benchmarks));
@@ -83,7 +82,7 @@ namespace BenchmarkTest
         {
             if (!_benchmarks.ContainsKey(scenario))
             {
-                Console.WriteLine(string.Format("Scenario '{0}' not previously tested. Adding to benchmarks.", scenario));
+                Console.WriteLine("Scenario '{0}' not previously tested. Adding to benchmarks.", scenario);
                 _benchmarks.Add(scenario, new PerformanceData { ScenarioName = scenario, TimeSpan = timeTaken });
                 var jsonString = JsonConvert.SerializeObject(_benchmarks);
                 File.WriteAllText(BenchmarkFile, jsonString);
@@ -94,6 +93,13 @@ namespace BenchmarkTest
                 {
                     throw new BenchmarkAssertionFailure(string.Format("Scenario '{0}' Failed. \nExpected time: {1}. Actual time: {2}", scenario, _benchmarks[scenario].TimeSpan, timeTaken));
                 }
+                Console.WriteLine("\n");
+                Console.WriteLine("Test Successful for Scenario: {0}.\n" +
+                                  "Time taken was within range of the benchmark for this scenario.\n" +
+                                  "Benchmark: {1}\n" +
+                                  "Time Taken: {2}\n" +
+                                  "Tolerance (seconds): {3}", scenario, _benchmarks[scenario].TimeSpan, timeTaken, ToleranceSeconds);
+                Console.WriteLine("\n");
             }
         }
     }
