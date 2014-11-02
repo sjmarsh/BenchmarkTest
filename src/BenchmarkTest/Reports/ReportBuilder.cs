@@ -32,18 +32,7 @@ namespace BenchmarkTest.Reports
         private static string GenerateReport(string reportTemplate, Dictionary<string, PerformanceData> reportData)
         {
             const string jsonDataToken = "#data-token#";
-            
-            /*
-           * required format
-           * [
-        ['Scenario', 'Benchmark', 'Time Taken'],
-        ['1',  10,      11],
-        ['2',  12,      11],
-        ['3',  15,       14],
-        ['4',  13,      12]
-      ]
-           */
-
+          
             var jsonString = new StringBuilder();
             jsonString.Append("[ ['Scenario', 'Benchmark', 'Time Taken'],");
 
@@ -57,7 +46,7 @@ namespace BenchmarkTest.Reports
                     lineFormat = "['{0}', {1}, {2}]";
                 }
                 
-                jsonString.Append(string.Format(lineFormat,  performanceData.ScenarioName, performanceData.BenchmarkedTime.Seconds, performanceData.LastRunTime.Seconds));
+                jsonString.Append(string.Format(lineFormat,  performanceData.ScenarioName, performanceData.BenchmarkedTime.TotalSeconds, performanceData.LastRunTime.TotalSeconds));
             }
             
             jsonString.Append("]");
